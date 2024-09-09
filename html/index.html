@@ -1,0 +1,23 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card Counting Trainer</title>
+  </head>
+  <body>
+    <div id="trainer-section">
+      <input type="number" id="num-deck-input" name="deck" max="8" min="1" />
+      <div
+        id="start-button"
+        hx-get="/startTraining"
+        hx-target="trainer-section"
+        hx-include="#num-deck-input"
+      >
+        Start
+      </div>
+    </div>
+  </body>
+</html>
+{{end}}

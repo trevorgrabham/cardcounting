@@ -1,0 +1,5 @@
+{{define "hand"}}
+<div id="hand-container" class="container">
+  {{for range .Cards}} {{template "card" .}} {{end}}
+</div>
+{{end}}
