@@ -8,15 +8,15 @@
   </head>
   <body>
     <div id="trainer-section">
-      <input type="number" id="num-deck-input" name="deck" max="8" min="1" />
-      <div
+      {{template "training-settings" .Settings}}
+      <button
         id="start-button"
-        hx-get="/startTraining"
+        hx-get="/training/start"
         hx-target="trainer-section"
         hx-include="#num-deck-input"
       >
         Start
-      </div>
+      </button>
     </div>
   </body>
 </html>

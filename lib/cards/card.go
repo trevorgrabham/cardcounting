@@ -1,18 +1,38 @@
 package cards
 
-import "math/rand/v2"
+import (
+	"fmt"
+	"math/rand/v2"
+	"os"
+)
 
 type Card struct {
 	Rank    CardRank
-	Value   int
-	ImgPath string
+	Value   uint8
+	SVG 		[]byte
+}
+
+func (c *Card) GetSVG() (err error) {
+	c.SVG, err = os.ReadFile(CardImgPaths[c.Rank])
+	if err != nil { return fmt.Errorf("getsvg from %s: %v", CardImgPaths[c.Rank], err) }
+	return nil 
 }
 
 func NewCard(c CardRank) (card Card) {
-	return Card{Rank: c, Value: ConvertToValue(c), ImgPath: CardImgPaths[c]}
+	res := Card{Rank: c, Value: ConvertToValue(c)}
+	res.GetSVG()
+	return res
 }
 
 type Deck []CardRank
+
+func Sum(cards []Card) uint8 {
+	var sum uint8
+	for _, card := range cards {
+		sum += card.Value
+	}
+	return sum
+}
 
 func NewDeck(numDecks int) (deck Deck) {
 	for i := range numDecks * 52 {
@@ -24,7 +44,7 @@ func NewDeck(numDecks int) (deck Deck) {
 	return
 }
 
-func ConvertToValue(rank CardRank) int {
+func ConvertToValue(rank CardRank) uint8 {
 	switch {
 	case rank == Unknown:
 		return 0
@@ -49,7 +69,7 @@ func ConvertToValue(rank CardRank) int {
 	case rank >= AceOfClubs && rank <= AceOfHearts:
 		return 1
 	}
-	return -1
+	return 255
 }
 
 type CardRank uint8

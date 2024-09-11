@@ -1,0 +1,12 @@
+{{define "training"}}
+<div id="training-section" class="main-section">
+  {{template "hand" .Dealer}}
+  <div id="message-box"></div>
+  {{template "hand" .Player}}
+  <div id="options-container">
+    {{if canSplit .Player}} {{template "button" .Split}} {{end}} {{template
+    "button" .Stand}} {{template "button" .Hit}} {{if canDouble .Player}}
+    {{template "button" .Double}} {{end}}
+  </div>
+</div>
+{{end}}

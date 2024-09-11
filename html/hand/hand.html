@@ -1,5 +1,8 @@
 {{define "hand"}}
-<div id="hand-container" class="container">
-  {{for range .Cards}} {{template "card" .}} {{end}}
+<div class="hand-wrapper">
+  <div class="card-container">
+    {{for range .Cards}} {{template "card" .}} {{end}}
+  </div>
+  <div class="hand-value-container">{{.Value}}</div>
 </div>
 {{end}}

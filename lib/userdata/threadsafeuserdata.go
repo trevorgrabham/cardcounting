@@ -34,28 +34,30 @@ func (d *ThreadSafeUserData) AddDeck(userID int64, deck cards.Deck) {
 	d.lock.Unlock()
 }
 
-func (d *ThreadSafeUserData) Draw(userID int64) (card cards.CardRank, finished bool) {
+func (d *ThreadSafeUserData) Draw(userID int64) (card cards.Card, finished bool) {
 	d.lock.Lock()
 	defer d.lock.Unlock()
 	user, ok := d.data[userID]
 
 	// not sure how they got this far without having any user data
-	if !ok { return cards.Nil, true }
+	if !ok { return cards.Card{}, true }
 	// We will never have to worry about the case where ok = true, but len(deck) = 0, since we check before returning the last card and would have deleted data[userID] before returning the last card
 
 	deck := user.deck
 	// clearly they forgot to check value of 'finished'
-	if deck == nil { return cards.Nil, true }
+	if deck == nil { return cards.Card{}, true }
 
-	card = deck[0]
+	c := deck[0]
 	switch {
-	case card <= cards.Unknown:
+	case c <= cards.Unknown:
 		panic(fmt.Errorf("drew an 'Uknowkn' or 'Nil' card"))
-	case card <= cards.SixOfHearts:
+	case c <= cards.SixOfHearts:
 		user.currentCount++
-	case card >= cards.TenOfClubs:
+	case c >= cards.TenOfClubs:
 		user.currentCount--
 	}
+	card = cards.NewCard(c)
+	if err := card.GetSVG(); err != nil { panic(err) }
 	if len(deck) <= 1 {
 		user.deck = nil
 		d.data[userID] = user
